@@ -7,7 +7,7 @@ import piniaPersist from 'pinia-plugin-persist'
 
 import App from './App.vue'
 import router from './router'
-import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import elementUi from '@/common/element-ui'
 import { loadSvg } from './icons'
 
 const pinia = createPinia()
@@ -18,8 +18,6 @@ const app = createApp(App)
 loadSvg(app)
 app.use(pinia)
 app.use(router)
+app.use(elementUi)
 
-for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
-  app.component(key, component)
-}
 app.mount('#app')

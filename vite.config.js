@@ -25,10 +25,21 @@ export default defineConfig({
     })
   ],
   server: {
-    proxy: {
-      '/api': 'http://testapi.xuexiluxian.cn'
-    },
     host: '0.0.0.0'
+    // proxy: {
+    //   '/api': {
+    //     target: 'https://apifoxmock.com/m1/5338620-5009482-default',
+    //     changeOrigin: true,
+    //     // rewrite: path => path.replace(/^\/api/, ''),
+    //     // secure: false
+    //     configure: (proxy, options) => {
+    //       // 配置此项可在响应头中看到请求的真实地址
+    //       proxy.on('proxyRes', (proxyRes, req) => {
+    //         proxyRes.headers['x-real-url'] = new URL(req.url || '', options.target)?.href || ''
+    //       })
+    //     }
+    //   }
+    // }
   },
   resolve: {
     alias: {

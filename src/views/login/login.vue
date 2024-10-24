@@ -7,7 +7,7 @@
       <div class="login">
         <div class="title">XXX后台管理系统</div>
         <div class="form-wrap">
-          <el-input :maxlength="20" size="large" v-model="form.accent" placeholder="请输入用户名">
+          <el-input :maxlength="20" size="large" v-model="form.username" placeholder="请输入用户名">
             <template #prefix>
               <el-icon><User /></el-icon>
             </template>
@@ -16,7 +16,7 @@
             :maxlength="20"
             size="large"
             show-password
-            v-model="form.pwd"
+            v-model="form.password"
             type="password"
             placeholder="请输入密码"
           >
@@ -56,11 +56,13 @@
 </template>
 
 <script setup>
+import {loginApi} from '@/api/login';
 const keepPwd = ref(false)
 const form = reactive({})
 
-const submit = function () {
-  console.log('form', form)
+const submit = async function () {
+  let res = await loginApi(form)
+  console.log('res',res);
 }
 </script>
 
