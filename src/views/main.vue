@@ -12,14 +12,14 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref } from 'vue'
-import { getSliders } from '@/api/demo.js'
-import { useCounterStore } from '@/stores/counter.js'
-let list = ref(123)
-const conutStore = useCounterStore()
+// import { onMounted, reactive, ref } from 'vue'
+// import { getSliders } from '@/api/demo.js'
+// import { useCounterStore } from '@/stores/counter.js'
+// let list = ref(123)
+// const conutStore = useCounterStore()
 onMounted(async () => {
-  let res = await getSliders()
-  console.log('res', res)
+  // let res = await getSliders()
+  // console.log('res', res)
 })
 </script>
 
