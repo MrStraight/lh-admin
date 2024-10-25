@@ -25,7 +25,7 @@ service.interceptors.response.use(
     console.log('响应拦截', res)
     // 判断code
     if (res.code === 0) {
-      return response.data
+      return res
     } else {
       console.log('err')
       if (res.message) {

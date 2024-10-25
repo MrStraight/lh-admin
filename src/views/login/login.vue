@@ -39,14 +39,15 @@
 
         <div class="control">
           <div class="keep-pwd">
-            <el-checkbox v-model="keepPwd" label="记住密码" size="large" />
+            <el-checkbox v-model="userInfoStore.isRemember" label="记住密码" size="large" />
           </div>
           <div class="forget-pwd">
             <el-link :underline="false">忘记密码</el-link>
           </div>
         </div>
         <div class="btn">
-          <el-button @click="submit()" type="primary" size="large" :auto-insert-space="true"
+          <el-button size="large" plain @click="quickLogin()">一键体验</el-button>
+          <el-button @click="submit()" type="primary" size="large" :auto-insert-space="false" :loading="btnLoading"
             >登录</el-button
           >
         </div>
@@ -57,12 +58,31 @@
 
 <script setup>
 import {loginApi} from '@/api/login';
-const keepPwd = ref(false)
-const form = reactive({})
+import {useUserInfoStore} from '@/stores/user'
+import { reactive } from 'vue';
 
+const btnLoading = ref(false)
+const userInfoStore = useUserInfoStore()
+const localFormStr = localStorage.getItem('userForm') || '{}'
+const localForm = reactive(JSON.parse(localFormStr))
+const form = reactive(localForm)
+
+const quickLogin = function(){
+  form.username = 'admin'
+  form.password = '123456'
+  submit()
+}
 const submit = async function () {
+  btnLoading.value = true
+  const keepPwd = userInfoStore.isRemember
+  if(keepPwd){
+    localStorage.setItem('userForm',JSON.stringify(form))
+  }else{
+    localStorage.removeItem('userForm')
+  }
   let res = await loginApi(form)
-  console.log('res',res);
+  userInfoStore.setToken(res.data.accessToken)
+  btnLoading.value = false
 }
 </script>
 
@@ -125,8 +145,9 @@ const submit = async function () {
         align-items: center;
       }
       .btn {
+        display: flex;
         .el-button {
-          width: 100%;
+          width: 50%;
         }
       }
     }

@@ -2,7 +2,6 @@
   <RouterView />
 </template>
 <script setup>
-let a = ref(123)
 </script>
 <style scoped lang="scss"></style>
 <style lang="scss">
