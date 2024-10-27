@@ -47,7 +47,12 @@
         </div>
         <div class="btn">
           <el-button size="large" plain @click="quickLogin()">一键体验</el-button>
-          <el-button @click="submit()" type="primary" size="large" :auto-insert-space="false" :loading="btnLoading"
+          <el-button
+            @click="submit()"
+            type="primary"
+            size="large"
+            :auto-insert-space="false"
+            :loading="btnLoading"
             >登录</el-button
           >
         </div>
@@ -57,32 +62,57 @@
 </template>
 
 <script setup>
-import {loginApi} from '@/api/login';
-import {useUserInfoStore} from '@/stores/user'
-import { reactive } from 'vue';
-
+import { loginApi } from '@/api/login'
+import { useUserInfoStore } from '@/stores/user'
+import { reactive } from 'vue'
+const router = useRouter()
+const route = useRoute()
 const btnLoading = ref(false)
 const userInfoStore = useUserInfoStore()
 const localFormStr = localStorage.getItem('userForm') || '{}'
 const localForm = reactive(JSON.parse(localFormStr))
 const form = reactive(localForm)
 
-const quickLogin = function(){
+const verifyForm = function () {
+  if (form.username && form.password) {
+    return true
+  } else {
+    $message.error('请输入用户名密码')
+    return false
+  }
+}
+const quickLogin = function () {
   form.username = 'admin'
   form.password = '123456'
   submit()
 }
 const submit = async function () {
-  btnLoading.value = true
-  const keepPwd = userInfoStore.isRemember
-  if(keepPwd){
-    localStorage.setItem('userForm',JSON.stringify(form))
-  }else{
-    localStorage.removeItem('userForm')
+  if (verifyForm()) {
+    btnLoading.value = true
+    const keepPwd = userInfoStore.isRemember
+    if (keepPwd) {
+      localStorage.setItem('userForm', JSON.stringify(form))
+    } else {
+      localStorage.removeItem('userForm')
+    }
+    let res = await loginApi(form)
+    userInfoStore.setToken(res.data.accessToken)
+    $message.success('登录成功')
+    btnLoading.value = false
+
+    successLogin()
   }
-  let res = await loginApi(form)
-  userInfoStore.setToken(res.data.accessToken)
-  btnLoading.value = false
+}
+
+const successLogin = function () {
+  const redirect = route.query.redirect
+  console.log('🚀 ~ successLogin ~ redirect:', redirect)
+  if (redirect) {
+    delete route.query.redirect
+    router.push({ path: redirect, query: route.query })
+  } else {
+    router.push('/')
+  }
 }
 </script>
 
@@ -98,22 +128,23 @@ const submit = async function () {
   .panel-wrap {
     width: 700px;
     margin: 0 auto;
-    box-shadow:
-      0 1px 2px -2px #00000029,
-      0 3px 6px #0000001f,
-      0 5px 12px 4px #00000017;
+    box-shadow: 0 1px 2px -2px #00000029, 0 3px 6px #0000001f, 0 5px 12px 4px #00000017;
     border-radius: 8px;
     padding: 20px;
     display: flex;
     align-items: stretch;
     .login-banner {
       width: 50%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+      justify-content: space-around;
       img {
         width: 100%;
       }
     }
     .login {
-      width: 50%;
+      // width: 50%;
       display: flex;
       flex-direction: column;
       padding: 22px;
@@ -151,6 +182,18 @@ const submit = async function () {
         }
       }
     }
+  }
+}
+@media (max-width: 768px) {
+  .login-banner {
+    width: 0;
+    display: none;
+  }
+  .login-banner {
+    display: none !important;
+  }
+  .panel-wrap {
+    width: 320px !important;
   }
 }
 </style>

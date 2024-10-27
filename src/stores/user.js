@@ -5,10 +5,18 @@ export const useUserInfoStore = defineStore(
   () => {
     const isRemember = ref(false)
     const token = ref('')
+    const userDetail = ref(null)
+    const routerList = ref([])
     const setToken = function (val) {
       token.value = val
     }
-    return { isRemember, setToken, token }
+    const setRouterList = function (val) {
+      routerList.value = val
+    }
+    const setUserInfo = function (val) {
+      userDetail.value = val
+    }
+    return { isRemember, setToken, setRouterList, setUserInfo, token, userDetail, routerList }
   },
   {
     persist: {

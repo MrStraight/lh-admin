@@ -14,7 +14,6 @@ const pinia = createPinia()
 pinia.use(piniaPersist)
 
 const app = createApp(App)
-
 loadSvg(app)
 app.use(pinia)
 app.use(router)

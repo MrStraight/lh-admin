@@ -7,3 +7,17 @@ export function loginApi(data) {
     data
   })
 }
+export function getRouterApi(data) {
+  return request({
+    method: 'post',
+    url: '/router',
+    data
+  })
+}
+export function getUserInfoApi(data) {
+  return request({
+    method: 'post',
+    url: '/detail',
+    data
+  })
+}

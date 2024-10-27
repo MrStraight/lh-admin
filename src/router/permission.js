@@ -1,16 +1,29 @@
+import { getRouterApi, getUserInfoApi } from '@/api/login'
 import { useUserInfoStore } from '@/stores/user'
 const whiteList = ['/login', '/404']
 export const routerPermission = function (router) {
-  router.beforeEach((to, form, next) => {
+  router.beforeEach(async (to, form, next) => {
     const userInfoStore = useUserInfoStore()
     const token = userInfoStore.token
-    console.log('to', to)
     if (!token) {
-      console.log('notoken')
+      // 没token
+      if (!whiteList.includes(to.path)) {
+        router.push({ path: '/login', query: { ...to.query, redirect: to.path } })
+      }
     } else {
-      console.log('token')
+      // 有token
       if (to.path == '/login') {
         router.push({ path: '/' })
+      }
+      if (!userInfoStore.userDetail) {
+        console.log('没有用户信息')
+        try {
+          const [routerList, userInfo] = await Promise.all([getRouterApi(), getUserInfoApi()])
+          userInfoStore.setRouterList(routerList.data)
+          userInfoStore.setUserInfo(userInfo.data)
+        } catch (error) {
+          console.error(error)
+        }
       }
     }
     next()

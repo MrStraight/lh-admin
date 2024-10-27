@@ -21,7 +21,7 @@ service.interceptors.request.use(
 
 service.interceptors.response.use(
   (response) => {
-    let res = response.data.data
+    let res = response.data
     console.log('响应拦截', res)
     // 判断code
     if (res.code === 0) {
